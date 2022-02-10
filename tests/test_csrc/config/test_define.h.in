@@ -6,5 +6,6 @@
 static constexpr const char *kBackends = "@MMDEPLOY_TARGET_BACKENDS@";
 static constexpr const char *kDevices = "@MMDEPLOY_TARGET_DEVICES@";
 static constexpr const char *kCodebases = "@CODEBASES@";
+static constexpr const char *kTransformDevices = "@MMDEPLOY_TRANSFORM_DEVICES@";
 
 #endif  // MMDEPLOY_TEST_DEFINE_H

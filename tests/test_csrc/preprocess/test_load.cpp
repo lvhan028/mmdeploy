@@ -16,7 +16,7 @@ using namespace mmdeploy::test;
 void TestLoad(const Value& cfg, const cv::Mat& mat, PixelFormat src_format,
               PixelFormat dst_format) {
   auto gResource = MMDeployTestResources::Get();
-  for (auto const& device_name : gResource.device_names()) {
+  for (auto const& device_name : gResource.transform_device_names()) {
     Device device{device_name.c_str()};
     Stream stream{device};
     auto transform = CreateTransform(cfg, device, stream);

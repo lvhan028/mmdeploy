@@ -25,7 +25,7 @@ tuple<int, int, int, int> CenterCropArea(const cv::Mat& mat, int crop_height, in
 
 void TestCenterCrop(const Value& cfg, const cv::Mat& mat, int crop_height, int crop_width) {
   auto gResource = MMDeployTestResources::Get();
-  for (auto const& device_name : gResource.device_names()) {
+  for (auto const& device_name : gResource.transform_device_names()) {
     Device device{device_name.c_str()};
     Stream stream{device};
     auto transform = CreateTransform(cfg, device, stream);

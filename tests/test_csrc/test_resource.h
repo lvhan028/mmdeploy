@@ -35,6 +35,7 @@ class MMDeployTestResources {
   }
   const std::vector<std::string> &backends() const { return backends_; }
   const std::vector<std::string> &codebases() const { return codebases_; }
+  const std::vector<std::string> &transform_device_names() const {return transform_devices_;}
   const std::string &resource_root_path() const { return resource_root_path_; }
 
   bool HasDevice(const std::string &name) const {
@@ -105,6 +106,8 @@ class MMDeployTestResources {
     devices_ = Split(kDevices);
     backends_ = Split(kBackends);
     codebases_ = Split(kCodebases);
+    transform_devices_ = Split(kTransformDevices);
+
     backend_devices_["pplnn"] = {"cpu", "cuda"};
     backend_devices_["trt"] = {"cuda"};
     backend_devices_["ort"] = {"cpu"};
@@ -142,6 +145,7 @@ class MMDeployTestResources {
   std::vector<std::string> devices_;
   std::vector<std::string> backends_;
   std::vector<std::string> codebases_;
+  std::vector<std::string> transform_devices_;
   std::map<std::string, std::vector<std::string>> backend_devices_;
   std::string resource_root_path_;
 };

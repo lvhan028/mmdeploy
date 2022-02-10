@@ -31,7 +31,7 @@ tuple<int, int, int, int> GetPadSize(const cv::Mat& mat, int divisor) {
 void TestPad(const Value& cfg, const cv::Mat& mat, int top, int left, int bottom, int right,
              int border_type, float val) {
   auto gResource = MMDeployTestResources::Get();
-  for (auto const& device_name : gResource.device_names()) {
+  for (auto const& device_name : gResource.transform_device_names()) {
     Device device{device_name.c_str()};
     Stream stream{device};
     auto transform = CreateTransform(cfg, device, stream);

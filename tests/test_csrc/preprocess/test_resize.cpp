@@ -12,6 +12,15 @@ using namespace mmdeploy;
 using namespace std;
 using namespace mmdeploy::test;
 
+bool IsAvailable(const std::string& device_name) {
+  for (auto _device_name : MMDeployTestResources::Get().transform_device_names()) {
+    if (_device_name == device_name) {
+      return true;
+    }
+  }
+  return false;
+}
+
 // return {target_height, target_width}
 tuple<int, int> GetTargetSize(const cv::Mat& src, int size0, int size1) {
   assert(size0 > 0);
@@ -43,7 +52,7 @@ tuple<int, int> GetTargetSize(const cv::Mat& src, int scale0, int scale1, bool k
 
 void TestResize(const Value& cfg, const std::string& device_name, const cv::Mat& mat,
                 int dst_height, int dst_width) {
-  if (MMDeployTestResources::Get().HasDevice(device_name)) {
+  if (IsAvailable(device_name)) {
     Device device{device_name.c_str()};
     Stream stream{device};
 
@@ -76,7 +85,7 @@ void TestResize(const Value& cfg, const std::string& device_name, const cv::Mat&
 
 void TestResizeWithScale(const Value& cfg, const std::string& device_name, const cv::Mat& mat,
                          int scale0, int scale1, bool keep_ratio) {
-  if (MMDeployTestResources::Get().HasDevice(device_name)) {
+  if (IsAvailable(device_name)) {
     Device device{device_name.c_str()};
     Stream stream{device};
     auto transform = CreateTransform(cfg, device, stream);
@@ -287,7 +296,7 @@ TEST_CASE("resize transform: size", "[resize]") {
     assert(bgra_mat.channels() == 4);
     constexpr int size = 256;
     auto [dst_height, dst_width] = GetTargetSize(bgra_mat, size, -1);
-    for (auto& device_name : gResource.device_names()) {
+    for (auto& device_name : gResource.transform_device_names()) {
       for (auto& interp : cuda_interpolations) {
         Value cfg{{"type", "Resize"},
                   {"size", {size, -1}},

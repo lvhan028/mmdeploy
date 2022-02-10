@@ -13,7 +13,7 @@ using namespace std;
 
 void TestImage2Tensor(const Value& cfg, const cv::Mat& mat) {
   auto gResource = MMDeployTestResources::Get();
-  for (auto const& device_name : gResource.device_names()) {
+  for (auto const& device_name : gResource.transform_device_names()) {
     Device device{device_name.c_str()};
     Stream stream{device};
     auto transform = CreateTransform(cfg, device, stream);

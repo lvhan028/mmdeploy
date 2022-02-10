@@ -29,6 +29,10 @@ if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "choose 'Release' as default build type" FORCE)
 endif ()
 
+if (NOT "cpu" IN_LIST MMDEPLOY_TARGET_DEVICES)
+    list(APPEND MMDEPLOY_TARGET_DEVICES "cpu")
+endif ()
+
 # when CUDA devices are enabled, the environment variable ASAN_OPTIONS=protect_shadow_gap=0
 # must be set at runtime
 if (MMDEPLOY_ASAN_ENABLE)

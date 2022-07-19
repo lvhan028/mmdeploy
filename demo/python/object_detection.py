@@ -23,7 +23,7 @@ def main():
     img = cv2.imread(args.image_path)
     detector = Detector(
         model_path=args.model_path, device_name=args.device_name, device_id=0)
-    bboxes, labels, masks = detector([img])[0]
+    bboxes, labels, masks = detector(img)
     assert (isinstance(bboxes, np.ndarray))
     assert (isinstance(labels, np.ndarray))
     assert (isinstance(masks, list))

@@ -15,6 +15,7 @@ class PyDetector {
     }
   }
   py::list Apply(const std::vector<PyImage> &imgs) {
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
     std::vector<mmdeploy_mat_t> mats;
     mats.reserve(imgs.size());
     for (const auto &img : imgs) {
@@ -56,6 +57,10 @@ class PyDetector {
     mmdeploy_detector_release_result(detection, result_count, (int)mats.size());
     return output;
   }
+  py::list Apply(const PyImage& img) {
+    std::cout << __PRETTY_FUNCTION__ << std::endl;
+    return Apply(std::vector{img})[0];
+  }
   ~PyDetector() {
     mmdeploy_detector_destroy(detector_);
     detector_ = {};
@@ -70,7 +75,8 @@ static void register_python_detector(py::module &m) {
       .def(py::init([](const char *model_path, const char *device_name, int device_id) {
         return std::make_unique<PyDetector>(model_path, device_name, device_id);
       }), py::arg("model_path"), py::arg("device_name"), py::arg("device_id")=0)
-      .def("__call__", &PyDetector::Apply);
+      .def("__call__", py::overload_cast<const std::vector<PyImage >&>(&PyDetector::Apply))
+      .def("__call__", py::overload_cast<const PyImage&>(&PyDetector::Apply));
 }
 
 class PythonDetectorRegisterer {

@@ -22,25 +22,32 @@ int main(int argc, char* argv[]) {
     return -1;
   }
 
+  mmdeploy::Context context(mmdeploy::Device{FLAGS_device});
+  mmdeploy::Profiler profiler("profile.bin");
+  context.Add(profiler);
+
   // construct a detector instance
-  mmdeploy::Detector detector(mmdeploy::Model{ARGS_model}, mmdeploy::Device{FLAGS_device});
+  mmdeploy::Detector detector(mmdeploy::Model{ARGS_model}, context);
 
-  // apply the detector, the result is an array-like class holding references to
-  // `mmdeploy_detection_t`, will be released automatically on destruction
-  mmdeploy::Detector::Result dets = detector.Apply(img);
+  int count = 1;
+  for (int i = 0; i < count; ++i) {
+    // apply the detector, the result is an array-like class holding references to
+    // `mmdeploy_detection_t`, will be released automatically on destruction
+    mmdeploy::Detector::Result dets = detector.Apply(img);
 
-  // visualize
-  utils::Visualize v;
-  auto sess = v.get_session(img);
-  int count = 0;
-  for (const mmdeploy_detection_t& det : dets) {
-    if (det.score > FLAGS_det_thr) {  // filter bboxes
-      sess.add_det(det.bbox, det.label_id, det.score, det.mask, count++);
+    // visualize
+    utils::Visualize v;
+    auto sess = v.get_session(img);
+    int count = 0;
+    for (const mmdeploy_detection_t& det : dets) {
+      if (det.score > FLAGS_det_thr) {  // filter bboxes
+        sess.add_det(det.bbox, det.label_id, det.score, det.mask, count++);
+      }
     }
-  }
 
-  if (!FLAGS_output.empty()) {
-    cv::imwrite(FLAGS_output, sess.get());
+    if (!FLAGS_output.empty()) {
+      cv::imwrite(FLAGS_output, sess.get());
+    }
   }
 
   return 0;
